@@ -6,7 +6,7 @@ import numpy as np
 import torch
 from torch.optim import AdamW
 from transformers import BertTokenizerFast, get_linear_schedule_with_warmup
-from data_loader import load_data
+from data_process import load_data
 from model import BertNER
 import time
 from config_loader import load_config
