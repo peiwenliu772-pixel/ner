@@ -1,37 +1,6 @@
 import torch
 from torch.utils.data import Dataset, DataLoader
-
-
-# ===========================================================
-# 1. 读取BIO文件
-# ===========================================================
-# def read_bio_file(file_path):
-#     sentences, labels = [], []              # 所有句子的词序列、标签序列
-#     cur_words, cur_labels = [], []          # 正在累积的一个句子
-
-#     with open(file_path, "r", encoding="utf-8") as f:
-#         for line in f:
-#             line = line.strip()
-#             if not line:                    # 空行：一个句子结束
-#                 if cur_words:
-#                     sentences.append(cur_words)
-#                     labels.append(cur_labels)
-#                     cur_words, cur_labels = [], []
-#                 continue
-
-#             parts = line.split("\t")        # 每行：字\t标签
-#             if len(parts) != 2:
-#                 continue
-#             word, tag = parts
-#             cur_words.append(word)
-#             cur_labels.append(tag)
-
-#     # 文件末尾如果没有空行，最后一个句子补上
-#     if cur_words:
-#         sentences.append(cur_words)
-#         labels.append(cur_labels)
-
-#     return sentences, labels
+import json
 
 def read_bio_file(file_path):
     """
@@ -61,22 +30,13 @@ def read_bio_file(file_path):
 # ===========================================================
 # 2. 完整 BIO 标签集合
 # ===========================================================
-def build_label_map_bio():
-    label_list = [
-        'O',
-        'B-PER.NOM', 'I-PER.NOM', 'B-PER.NAM', 'I-PER.NAM',
-        'B-LOC.NOM', 'I-LOC.NOM', 'B-LOC.NAM', 'I-LOC.NAM',
-        'B-GPE.NOM', 'I-GPE.NOM', 'B-GPE.NAM', 'I-GPE.NAM',
-        'B-ORG.NOM', 'I-ORG.NOM', 'B-ORG.NAM', 'I-ORG.NAM'
-    ]
-    # 相当于
-    #     label2id = {}
-    # for i, label in enumerate(label_list):
-    #     label2id[label] = i
-
-    label2id = {label: i for i, label in enumerate(label_list)}
-    id2label = {i: label for i, label in enumerate(label_list)}
-    return label2id, id2label
+def build_label_map_bio(json_path):
+     with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+        label_list = data["labels"]
+        label2id = {label: i for i, label in enumerate(label_list)}
+        id2label = {i: label for i, label in enumerate(label_list)}
+        return label2id, id2label
 
 
 # ===========================================================
@@ -153,7 +113,7 @@ class NERDataset(Dataset):
 # 5. DataLoader
 # ===========================================================
 def load_data(config, tokenizer):
-    label2id, id2label = build_label_map_bio()
+    label2id, id2label = build_label_map_bio(config.labels_map_bio_path)
 
     train_dataset = NERDataset(config.train_path, tokenizer, label2id, config.max_seq_len)
     dev_dataset = NERDataset(config.dev_path, tokenizer, label2id, config.max_seq_len)
@@ -185,6 +145,7 @@ if __name__ == "__main__":
         train_path = "data/train.txt"
         dev_path = "data/dev.txt"
         test_path = "data/test.txt"
+        labels_map_bio_path = "data/labels.json"
         max_seq_len = 256
         batch_size = 8
 

@@ -1,0 +1,9 @@
+{
+    "labels": [
+        "O",
+        "B-PER.NOM", "I-PER.NOM", "B-PER.NAM", "I-PER.NAM",
+        "B-LOC.NOM", "I-LOC.NOM", "B-LOC.NAM", "I-LOC.NAM",
+        "B-GPE.NOM", "I-GPE.NOM", "B-GPE.NAM", "I-GPE.NAM",
+        "B-ORG.NOM", "I-ORG.NOM", "B-ORG.NAM", "I-ORG.NAM"
+    ]
+}

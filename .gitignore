@@ -1,4 +1,5 @@
 .idea/
 *.bin
-hfmodel/
+pre_model/
 output/
+__pycache__
