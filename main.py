@@ -6,8 +6,6 @@ import numpy as np
 import torch
 from torch.optim import AdamW
 from transformers import BertTokenizerFast, get_linear_schedule_with_warmup
-from seqeval.metrics import precision_score, recall_score, f1_score, classification_report
-from seqeval.scheme import IOB2
 from data_loader import load_data
 from model import BertNER
 import time
@@ -46,43 +44,6 @@ def get_entities_from_bio(tags):
     # spaCy 返回的 end 是开区间 → 改为闭区间
     return [(label, start, end - 1) for label, start, end in entities]
 
-
-# @torch.no_grad()
-# def evaluate(myconfig,model, dataloader):
-#     """
-#     使用 seqeval 库计算 NER 指标
-#     返回字典：{"precision": ..., "recall": ..., "f1": ...}
-#     """
-#     device = myconfig.device
-#     id2label = myconfig.id2label
-#     model_was_training = model.training
-#     model.eval()
-
-#     all_preds = []
-#     all_labels = []
-
-#     for batch in dataloader:
-#         input_ids      = batch["input_ids"].to(device)
-#         attention_mask = batch["attention_mask"].to(device)
-#         labels         = batch["labels"].to(device)
-
-#         logits = model(input_ids=input_ids, attention_mask=attention_mask)["logits"]
-#         preds = torch.argmax(logits, dim=-1)
-
-#         for pred_seq, true_seq in zip(preds.cpu().tolist(), labels.cpu().tolist()):
-#             # 去掉 pad/ignore
-#             pred_tags = [id2label[p] for p, t in zip(pred_seq, true_seq) if t != -100]
-#             true_tags = [id2label[t] for t in true_seq if t != -100]
-
-#             all_preds.append(pred_tags)
-#             all_labels.append(true_tags)
-
-#     precision = precision_score(all_labels, all_preds)
-#     recall    = recall_score(all_labels, all_preds)
-#     f1        = f1_score(all_labels, all_preds)
-#     if model_was_training:
-#         model.train()
-#     return {"precision": precision, "recall": recall, "f1": f1}
 
 def getPRF(pred_list, true_list):
     TP, pre, true = 0, 0, 0
