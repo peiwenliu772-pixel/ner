@@ -1,0 +1,19 @@
+{
+    "dataset": "weibo",
+    "pretrained_model_name": "hfl/chinese-bert-wwm",
+    "train_path": "./data/weibo/train.txt",
+    "dev_path": "./data/weibo/dev.txt",
+    "test_path": "./data/weibo/test.txt",
+    "labels_path": "./data/weibo/weibo_labels.json",
+    "local_dir": "./pretrained_models",
+    "cache_dir": "./pre_model",
+    "max_seq_len": 256,
+    "batch_size": 8,
+    "epochs": 5,
+    "learning_rate": 2e-5,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.1,
+    "dropout": 0.1,
+    "seed": 42,
+    "output_dir": "./output"
+}
