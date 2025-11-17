@@ -62,23 +62,19 @@ ner
 
 ### 选择不同模型和数据集
 
-<div style="background-color: #f5f5f5; padding: 12px 16px; border-radius: 6px; position: relative; margin: 10px 0;">
   只需main.py中修改不同的配置文件。
-  <button style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; color: #666;">📋</button>
-</div>
 
 ### 训练/评估
 
-<div style="background-color: #f5f5f5; padding: 12px 16px; border-radius: 6px; position: relative; margin: 10px 0;">
   直接运行main.py即可。
-  <button style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; color: #666;">📋</button>
-</div>
+  ```bash
+  python main.py
+  ```
 
 ### 测试
-<div style="background-color: #f5f5f5; padding: 12px 16px; border-radius: 6px; position: relative; margin: 10px 0;">
-  加载已保存的权重文件，进行测试，返回Precision（精确率）、Recall（召回率）、F1-score（F1 分数）。
-  <button style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; color: #666;">📋</button>
-</div>
+
+  在main.py中加载已保存的权重文件，进行测试，返回Precision（精确率）、Recall（召回率）、F1-score（F1 分数）。
+
 
 ## 📁 六、实验结果
 
