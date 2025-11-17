@@ -113,8 +113,8 @@ class NERDataset(Dataset):
 # 5. DataLoader
 # ===========================================================
 def load_data(config, tokenizer):
-    label2id, id2label = build_label_map_bio(config.labels_map_bio_path)
-
+     
+    label2id, id2label = build_label_map_bio(config.labels_path)
     train_dataset = NERDataset(config.train_path, tokenizer, label2id, config.max_seq_len)
     dev_dataset = NERDataset(config.dev_path, tokenizer, label2id, config.max_seq_len)
     test_dataset = NERDataset(config.test_path, tokenizer, label2id, config.max_seq_len)

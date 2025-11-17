@@ -23,15 +23,9 @@ def set_seed(seed=42):
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
 
-
 # -----------------------------
-# 1) 全局配置
+# 1) BIO → 实体抽取
 # -----------------------------
-
-
-# # -----------------------------
-# # 2) 评估
-# # -----------------------------
 def get_entities_from_bio(tags):
     """
     将 BIO 标签序列转为实体列表 [(entity_type, start_idx, end_idx), ...]
@@ -44,7 +38,9 @@ def get_entities_from_bio(tags):
     # spaCy 返回的 end 是开区间 → 改为闭区间
     return [(label, start, end - 1) for label, start, end in entities]
 
-
+# -----------------------------
+# 2) 评估
+# -----------------------------
 def getPRF(pred_list, true_list):
     TP, pre, true = 0, 0, 0
     for pred_entities, true_entities in zip(pred_list, true_list):
@@ -120,16 +116,23 @@ def train_one_epoch(myconfig, model, loader, optimizer, scheduler):
 # 4) 主流程
 # -----------------------------
 def main():
-    myconfig = load_config("config.json")
+    myconfig = load_config("./ner_config/msra_bert_wwm.json")
+    print(f"当前数据集: {myconfig.dataset}")
+    print(f"加载模型:{myconfig.pretrained_model_name}")
+
     set_seed(myconfig.seed)
+    myconfig.output_dir = os.path.join("output", myconfig.dataset, myconfig.pretrained_model_name)
     os.makedirs(myconfig.output_dir, exist_ok=True)
+    log_path = os.path.join(myconfig.output_dir, "train_log.txt")
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
-
-    # tokenizer=BertTokenizerFast.from_pretrained(myconfig.pretrained_model_path)
-
+    
     tokenizer = BertTokenizerFast.from_pretrained(myconfig.pretrained_model_name, cache_dir=myconfig.cache_dir)
+   
+
     # DataLoader
+    
     train_loader, dev_loader, test_loader, label2id, id2label = load_data(myconfig, tokenizer)
     print(f"训练集样本数：{len(train_loader.dataset)}")
     print(f"单epoch训练步数:{len(train_loader)}")
@@ -165,7 +168,8 @@ def main():
         main_score = dev_metrics.get("f1", 0.0)
 
         print(f"[Epoch {ep}] train_loss={train_loss:.4f} dev={dev_metrics}")
-
+        with open(log_path, "a", encoding="utf-8") as f:
+            f.write(f"Epoch {ep} | train_loss={train_loss:.4f} | dev={dev_metrics}\n")
         if main_score > best:
             best = main_score
             torch.save(model.state_dict(), os.path.join(myconfig.output_dir, "pytorch_model.bin"))
@@ -178,7 +182,8 @@ def main():
     model.load_state_dict(torch.load(os.path.join(myconfig.output_dir, "pytorch_model.bin"), map_location=device))
     test_metrics = evaluate(myconfig, model, test_loader)
     print(f"测试结果:{test_metrics}")
-
+    with open(log_path, "a", encoding="utf-8") as f:
+        f.write(f"测试结果:{test_metrics}\n")
 
 if __name__ == "__main__":
     main()

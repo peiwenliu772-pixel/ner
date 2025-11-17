@@ -5,9 +5,7 @@ from transformers import BertModel
 class BertNER(nn.Module):
     def __init__(self, myconfig):
         super().__init__()
-        # self.cfg = myconfigfig
         self.num_labels=myconfig.num_labels
-        # self.bert = BertModel.from_pretrained(myconfig.pretrained_model_path)
         self.bert = BertModel.from_pretrained(myconfig.pretrained_model_name, cache_dir=myconfig.cache_dir)
         self.dropout = nn.Dropout(myconfig.dropout)
         self.classifier = nn.Linear(self.bert.config.hidden_size,self.num_labels)
