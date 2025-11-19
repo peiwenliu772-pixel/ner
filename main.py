@@ -128,7 +128,7 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
     
-    tokenizer = BertTokenizerFast.from_pretrained(myconfig.pretrained_model_name, cache_dir=myconfig.cache_dir)
+    tokenizer = BertTokenizerFast.from_pretrained(myconfig.pretrained_model_path)
    
 
     # DataLoader

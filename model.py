@@ -6,7 +6,7 @@ class BertNER(nn.Module):
     def __init__(self, myconfig):
         super().__init__()
         self.num_labels=myconfig.num_labels
-        self.bert = BertModel.from_pretrained(myconfig.pretrained_model_name, cache_dir=myconfig.cache_dir)
+        self.bert = BertModel.from_pretrained(myconfig.pretrained_model_path)
         self.dropout = nn.Dropout(myconfig.dropout)
         self.classifier = nn.Linear(self.bert.config.hidden_size,self.num_labels)
         self.loss_fct = nn.CrossEntropyLoss(ignore_index=-100)
